@@ -9,7 +9,7 @@ This is a [Docker](http://docker.io) project to bring up a local
 ### Install Docker
 
 Follow the [instructions on Docker's website](https://www.docker.io/gettingstarted/#h_installation)
-to install Docker.
+to install Docker 0.10.0+.
 
 From there, ensure that your `DOCKER_HOST` environmental variable is set
 correctly:
