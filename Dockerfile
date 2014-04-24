@@ -62,6 +62,7 @@ ADD bin/seed-member-join.sh /etc/service/serf/
 # Tune Riak and Riak CS configuration settings for the container
 ADD etc/riak-app.config /etc/riak/app.config
 RUN sed -i.bak "s/riak_cs-VERSION/riak_cs-${RIAK_CS_VERSION}/" /etc/riak/app.config && \
+    sed -i.bak 's/\"127.0.0.1\", 8098/\"0.0.0.0\", 8098/' /etc/riak/app.config && \
     sed -i.bak "s/-env ERL_MAX_PORTS 16384/-env ERL_MAX_PORTS 64000/" /etc/riak/vm.args && \
     sed -i.bak "s/##+zdbbl 32768/+zdbbl 96000/" /etc/riak/vm.args && \
     sed -i.bak "s/{cs_ip, \"127.0.0.1\"},/{cs_ip, \"0.0.0.0\"},/" /etc/riak-cs/app.config && \
