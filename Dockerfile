@@ -70,18 +70,6 @@ RUN sed -i.bak "s/riak_cs-VERSION/riak_cs-${RIAK_CS_VERSION}/" /etc/riak/app.con
     sed -i.bak "s/{anonymous_user_creation, false},/{anonymous_user_creation, true},/" /etc/riak-cs/app.config && \
     sed -i.bak "s/{stanchion_ip, \"127.0.0.1\"},/{stanchion_ip, \"0.0.0.0\"},/" /etc/stanchion/app.config
 
-# sysctl
-RUN echo "vm.swappiness = 0" > /etc/sysctl.d/riak.conf && \
-    echo "net.ipv4.tcp_max_syn_backlog = 40000" >> /etc/sysctl.d/riak.conf && \
-    echo "net.core.somaxconn = 40000" >> /etc/sysctl.d/riak.conf && \
-    echo "net.ipv4.tcp_sack = 1" >> /etc/sysctl.d/riak.conf && \
-    echo "net.ipv4.tcp_window_scaling = 1" >> /etc/sysctl.d/riak.conf && \
-    echo "net.ipv4.tcp_fin_timeout = 15" >> /etc/sysctl.d/riak.conf && \
-    echo "net.ipv4.tcp_keepalive_intvl = 30" >> /etc/sysctl.d/riak.conf && \
-    echo "net.ipv4.tcp_tw_reuse = 1" >> /etc/sysctl.d/riak.conf && \
-    echo "net.ipv4.tcp_moderate_rcvbuf = 1" >> /etc/sysctl.d/riak.conf && \
-    sysctl -e -p /etc/sysctl.d/riak.conf
-
 # Make the Riak, Riak CS, and Stanchion log directories into volumes
 VOLUME /var/lib/riak
 VOLUME /var/log/riak
