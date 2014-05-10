@@ -30,6 +30,23 @@ $ for i in {49000..49900}; do
 done
 ```
 
+### `sysctl`
+
+In order to tune the Docker host housing Riak containers, consider applying
+the following `sysctl` settings:
+
+```
+vm.swappiness = 0
+net.ipv4.tcp_max_syn_backlog = 40000
+net.core.somaxconn = 40000
+net.ipv4.tcp_sack = 1
+net.ipv4.tcp_window_scaling = 1
+net.ipv4.tcp_fin_timeout = 15
+net.ipv4.tcp_keepalive_intvl = 30
+net.ipv4.tcp_tw_reuse = 1
+net.ipv4.tcp_moderate_rcvbuf = 1
+```
+
 ## Running
 
 ### Clone repository and build Riak CS image
@@ -120,17 +137,18 @@ $ ssh -i insecure_key root@172.17.0.2
 Next, we extract the `admin_key` and `admin_secret` from the Riak CS
 configuration file:
 
-```bash
-$ egrep "admin_key" /etc/riak-cs/app.config | cut -d'"' -f2
+```
+root@90caa115f34f:~# egrep "admin_key" /etc/riak-cs/app.config | cut -d'"' -f2
 AU4RL35KFK4N1EFTA0LO
-$ egrep "admin_secret" /etc/riak-cs/app.config | cut -d'"' -f2
+root@90caa115f34f:~# egrep "admin_secret" /etc/riak-cs/app.config | cut -d'"' -f2
 9EXxoSTLzrJFkwBDk2lijWiQiSeSa3o7eZOQ-w==
 ```
 
 Then, we need to the port mappings for `8080`. For example, here's how to get
-the port mapping for `riak-cs01`
+the port mapping for `riak-cs01`:
 
-```bash
+```
+root@90caa115f34f:~# exit
 $ docker port riak-cs01 8080 | cut -d":" -f2
 49158
 ```
