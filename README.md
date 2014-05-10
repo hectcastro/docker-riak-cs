@@ -137,17 +137,18 @@ $ ssh -i insecure_key root@172.17.0.2
 Next, we extract the `admin_key` and `admin_secret` from the Riak CS
 configuration file:
 
-```bash
-$ egrep "admin_key" /etc/riak-cs/app.config | cut -d'"' -f2
+```
+root@90caa115f34f:~# egrep "admin_key" /etc/riak-cs/app.config | cut -d'"' -f2
 AU4RL35KFK4N1EFTA0LO
-$ egrep "admin_secret" /etc/riak-cs/app.config | cut -d'"' -f2
+root@90caa115f34f:~# egrep "admin_secret" /etc/riak-cs/app.config | cut -d'"' -f2
 9EXxoSTLzrJFkwBDk2lijWiQiSeSa3o7eZOQ-w==
 ```
 
 Then, we need to the port mappings for `8080`. For example, here's how to get
-the port mapping for `riak-cs01`
+the port mapping for `riak-cs01`:
 
-```bash
+```
+root@90caa115f34f:~# exit
 $ docker port riak-cs01 8080 | cut -d":" -f2
 49158
 ```
