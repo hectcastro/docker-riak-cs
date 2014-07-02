@@ -2,18 +2,18 @@
 #
 # VERSION       0.2.0
 
-FROM phusion/baseimage:0.9.9
+FROM phusion/baseimage:0.9.11
 MAINTAINER Hector Castro hector@basho.com
 
 # Environmental variables
 ENV DEBIAN_FRONTEND noninteractive
-ENV RIAK_VERSION 1.4.8
+ENV RIAK_VERSION 1.4.9
 ENV RIAK_SHORT_VERSION 1.4
 ENV RIAK_CS_VERSION 1.4.5
 ENV RIAK_CS_SHORT_VERSION 1.4
 ENV STANCHION_VERSION 1.4.3
 ENV STANCHION_SHORT_VERSION 1.4
-ENV SERF_VERSION 0.5.0
+ENV SERF_VERSION 0.6.2
 
 # Install dependencies
 RUN apt-get update -qq && apt-get install unzip -y
