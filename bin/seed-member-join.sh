@@ -22,8 +22,8 @@ if egrep -q "admin-key" /etc/riak-cs/app.config; then
        -H "Content-Type: application/json" \
        --data '{"email":"admin@admin.com", "name":"admin"}' > /tmp/riak-cs-credentials
 
-  RIAK_CS_ADMIN_KEY=$(egrep -o "\{.*\}" /tmp/riak-cs-credentials | python -mjson.tool | egrep "key_id" | cut -d'"' -f4)
-  RIAK_CS_ADMIN_SECRET=$(egrep -o "\{.*\}" /tmp/riak-cs-credentials  | python -mjson.tool | egrep "key_secret" | cut -d'"' -f4)
+  RIAK_CS_ADMIN_KEY=$(egrep -o "\{.*\}" /tmp/riak-cs-credentials | python3 -mjson.tool | egrep "key_id" | cut -d'"' -f4)
+  RIAK_CS_ADMIN_SECRET=$(egrep -o "\{.*\}" /tmp/riak-cs-credentials  | python3 -mjson.tool | egrep "key_secret" | cut -d'"' -f4)
 
   # Populate admin credentials locally
   sudo su -c "sed -i 's/admin-key/${RIAK_CS_ADMIN_KEY}/' /etc/riak-cs/app.config" - root
