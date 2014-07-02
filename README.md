@@ -15,7 +15,7 @@ From there, ensure that your `DOCKER_HOST` environmental variable is set
 correctly:
 
 ```bash
-$ export DOCKER_HOST="tcp://127.0.0.1:4243"
+$ export DOCKER_HOST="tcp://192.168.59.103:2375"
 ```
 
 **Note:** If you're using [boot2docker](https://github.com/boot2docker/boot2docker)

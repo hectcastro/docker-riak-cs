@@ -6,6 +6,7 @@ if env | egrep -q "DOCKER_RIAK_CS_DEBUG"; then
   set -x
 fi
 
+CLEAN_DOCKER_HOST=$(echo "${DOCKER_HOST}" | cut -d'/' -f3 | cut -d':' -f1)
 DOCKER_RIAK_CS_CLUSTER_SIZE=${DOCKER_RIAK_CS_CLUSTER_SIZE:-5}
 
 if docker ps -a | egrep "hectcastro/riak" >/dev/null; then
@@ -40,7 +41,7 @@ do
   CONTAINER_ID=$(docker ps | egrep "riak-cs${index}[^/]" | cut -d" " -f1)
   CONTAINER_PORT=$(docker port "${CONTAINER_ID}" 8080 | cut -d ":" -f2)
 
-  until curl -s "http://localhost:${CONTAINER_PORT}/riak-cs/ping" | egrep "OK" > /dev/null 2>&1;
+  until curl -s "http://${CLEAN_DOCKER_HOST}:${CONTAINER_PORT}/riak-cs/ping" | egrep "OK" > /dev/null 2>&1;
   do
     sleep 3
   done
