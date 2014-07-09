@@ -50,6 +50,26 @@ do
   echo "  Successfully brought up [riak-cs${index}]"
 done
 
+if env | egrep -q "DOCKER_RIAK_CS_HAPROXY"; then
+  RIAK_CS_CONTAINER_LINKS=""
+
+  for index in $(seq -f "%02g" "1" "${DOCKER_RIAK_CS_CLUSTER_SIZE}");
+  do
+    RIAK_CS_CONTAINER_LINKS="${RIAK_CS_CONTAINER_LINKS}--link riak-cs${index}:riak-cs${index} "
+  done
+
+  eval docker run -p 8080:8080 -p 8888:8888 \
+    "${RIAK_CS_CONTAINER_LINKS}"\
+    --name "riak-cs-haproxy" -d hectcastro/riak-cs-haproxy > /dev/null 2>&1
+
+  until curl -s "http://${CLEAN_DOCKER_HOST}:8080/riak-cs/ping" | egrep "OK" > /dev/null 2>&1;
+  do
+    sleep 3
+  done
+
+  echo "  Successfully brought up [riak-cs-haproxy]"
+fi
+
 INSECURE_KEY_FILE=.insecure_key
 SSH_KEY_URL="https://github.com/phusion/baseimage-docker/raw/master/image/insecure_key"
 CS01_PORT=$(docker port riak-cs01 22 | cut -d':' -f2)

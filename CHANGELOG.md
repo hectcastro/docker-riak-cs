@@ -1,3 +1,8 @@
+## 0.4.0
+
+* Use `localhost` if `DOCKER_HOST` is not defined.
+* Emit Riak CS admin key and secret after cluster start.
+
 ## 0.3.0
 
 * Bump Riak version to `1.4.9`.
