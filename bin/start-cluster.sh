@@ -50,6 +50,11 @@ do
 done
 
 echo
+# Download insecure ssh key of phusion/baseimage-docker
+if [ ! -f .insecure_key ]; then
+    curl -o .insecure_key -fSL https://github.com/phusion/baseimage-docker/raw/master/image/insecure_key > /dev/null 2>&1
+    chmod 600 .insecure_key
+fi
 CS01_IP=$(docker inspect --format='{{.NetworkSettings.IPAddress}}' riak-cs01)
 SSH_OPTIONS="-o LogLevel=quiet -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no"
 for field in admin_key admin_secret ; do
