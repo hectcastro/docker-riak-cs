@@ -50,5 +50,12 @@ do
 done
 
 echo
+CS01_IP=$(docker inspect --format='{{.NetworkSettings.IPAddress}}' riak-cs01)
+SSH_OPTIONS="-o LogLevel=quiet -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no"
+for field in admin_key admin_secret ; do
+    echo -n "$field: "
+    ssh -i .insecure_key $SSH_OPTIONS root@$CS01_IP egrep $field /etc/riak-cs/app.config | cut -d'"' -f2
+done
+echo
 echo "Please wait approximately 30 seconds for the cluster to stabilize."
 echo
