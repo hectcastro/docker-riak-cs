@@ -51,16 +51,30 @@ done
 
 echo
 # Download insecure ssh key of phusion/baseimage-docker
-if [ ! -f .insecure_key ]; then
-    curl -o .insecure_key -fSL https://github.com/phusion/baseimage-docker/raw/master/image/insecure_key > /dev/null 2>&1
-    chmod 600 .insecure_key
+INSECURE_KEY_FILE=.insecure_key
+if [ ! -f $INSECURE_KEY_FILE ]; then
+  SSH_KEY_URL="https://github.com/phusion/baseimage-docker/raw/master/image/insecure_key"
+  echo "Downloading SSH insecure key..."
+  if which curl > /dev/null; then
+    curl -o .insecure_key -fSL $SSH_KEY_URL > /dev/null 2>&1
+  elif which wget > /dev/null; then
+    wget -O .insecure_key $SSH_KEY_URL > /dev/null 2>&1
+  else
+    echo "curl or wget required to download SSH insecure key"
+    echo "Check the README to get more info about how to download this keys"
+  fi
 fi
-CS01_IP=$(docker inspect --format='{{.NetworkSettings.IPAddress}}' riak-cs01)
-SSH_OPTIONS="-o LogLevel=quiet -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no"
-for field in admin_key admin_secret ; do
+
+if [ -f $INSECURE_KEY_FILE ]; then
+  # SSH requires some constraints on private key permissions, force it!
+  [ "$(stat --printf="%a\n" .insecure_key)" == "600" ] || chmod 600 .insecure_key
+  CS01_IP=$(docker inspect --format='{{.NetworkSettings.IPAddress}}' riak-cs01)
+  for field in admin_key admin_secret ; do
     echo -n "$field: "
-    ssh -i .insecure_key $SSH_OPTIONS root@$CS01_IP egrep $field /etc/riak-cs/app.config | cut -d'"' -f2
-done
+    ssh -i "$INSECURE_KEY_FILE" -o 'LogLevel=quiet' -o 'UserKnownHostsFile=/dev/null' -o 'StrictHostKeyChecking=no' root@"$CS01_IP" egrep "$field" /etc/riak-cs/app.config | cut -d'"' -f2
+  done
+fi
+
 echo
 echo "Please wait approximately 30 seconds for the cluster to stabilize."
 echo
