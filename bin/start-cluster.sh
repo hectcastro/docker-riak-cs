@@ -50,28 +50,37 @@ do
 done
 
 echo
-# Download insecure ssh key of phusion/baseimage-docker
+
 INSECURE_KEY_FILE=.insecure_key
+SSH_KEY_URL="https://github.com/phusion/baseimage-docker/raw/master/image/insecure_key"
+CS01_PORT=$(docker port riak-cs01 22 | cut -d':' -f2)
+
+# Download insecure ssh key of phusion/baseimage-docker
 if [ ! -f $INSECURE_KEY_FILE ]; then
-  SSH_KEY_URL="https://github.com/phusion/baseimage-docker/raw/master/image/insecure_key"
   echo "Downloading SSH insecure key..."
+
   if which curl > /dev/null; then
     curl -o .insecure_key -fSL $SSH_KEY_URL > /dev/null 2>&1
   elif which wget > /dev/null; then
     wget -O .insecure_key $SSH_KEY_URL > /dev/null 2>&1
   else
-    echo "curl or wget required to download SSH insecure key"
-    echo "Check the README to get more info about how to download this keys"
+    echo "curl or wget is required to download insecure SSH key. Check"
+    echo "the README to get more information about how to download it."
   fi
 fi
 
 if [ -f $INSECURE_KEY_FILE ]; then
   # SSH requires some constraints on private key permissions, force it!
-  [ "$(stat --printf="%a\n" .insecure_key)" == "600" ] || chmod 600 .insecure_key
-  CS01_IP=$(docker inspect --format='{{.NetworkSettings.IPAddress}}' riak-cs01)
+  chmod 600 .insecure_key
+
+  echo "Riak CS credentials:"
+  echo
+
   for field in admin_key admin_secret ; do
-    echo -n "$field: "
-    ssh -i "$INSECURE_KEY_FILE" -o 'LogLevel=quiet' -o 'UserKnownHostsFile=/dev/null' -o 'StrictHostKeyChecking=no' root@"$CS01_IP" egrep "$field" /etc/riak-cs/app.config | cut -d'"' -f2
+    echo -n "  ${field}: "
+
+    ssh -i "${INSECURE_KEY_FILE}" -o "LogLevel=quiet" -o "UserKnownHostsFile=/dev/null" -o "StrictHostKeyChecking=no" \
+        -p "${CS01_PORT}" "root@${CLEAN_DOCKER_HOST}" egrep "${field}" /etc/riak-cs/app.config | cut -d'"' -f2
   done
 fi
 
