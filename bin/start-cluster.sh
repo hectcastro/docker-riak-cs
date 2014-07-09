@@ -7,6 +7,7 @@ if env | egrep -q "DOCKER_RIAK_CS_DEBUG"; then
 fi
 
 CLEAN_DOCKER_HOST=$(echo "${DOCKER_HOST}" | cut -d'/' -f3 | cut -d':' -f1)
+CLEAN_DOCKER_HOST=${CLEAN_DOCKER_HOST:-localhost}
 DOCKER_RIAK_CS_CLUSTER_SIZE=${DOCKER_RIAK_CS_CLUSTER_SIZE:-5}
 
 if docker ps -a | egrep "hectcastro/riak" >/dev/null; then
