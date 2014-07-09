@@ -1,6 +1,6 @@
 # Riak CS
 #
-# VERSION       0.3.0
+# VERSION       0.4.0
 
 FROM phusion/baseimage:0.9.11
 MAINTAINER Hector Castro hector@basho.com
@@ -77,7 +77,7 @@ VOLUME /var/log/riak-cs
 VOLUME /var/log/stanchion
 
 # Open the HTTP port for Riak and Riak CS (S3)
-EXPOSE 8098 8080
+EXPOSE 8098 8080 22
 
 # Enable insecure SSH key
 # See: https://github.com/phusion/baseimage-docker#using_the_insecure_key_for_one_container_only
