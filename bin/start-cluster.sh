@@ -6,18 +6,29 @@ if env | egrep -q "DOCKER_RIAK_CS_DEBUG"; then
   set -x
 fi
 
+if ! env | egrep -q "DOCKER_RIAK_CS_AUTOMATIC_CLUSTERING=1" && \
+  env | egrep -q "DOCKER_RIAK_CS_HAPROXY=1"; then
+  echo
+  echo "It appears that you have enabled HAProxy support, but have"
+  echo "not enabled automatic clustering. In order to use Riak and"
+  echo "HAProxy, please enable automatic clustering."
+  echo
+
+  exit 1
+fi
+
 CLEAN_DOCKER_HOST=$(echo "${DOCKER_HOST}" | cut -d'/' -f3 | cut -d':' -f1)
 CLEAN_DOCKER_HOST=${CLEAN_DOCKER_HOST:-localhost}
 DOCKER_RIAK_CS_CLUSTER_SIZE=${DOCKER_RIAK_CS_CLUSTER_SIZE:-5}
 
 if docker ps -a | egrep "hectcastro/riak" >/dev/null; then
-  echo ""
+  echo
   echo "It looks like you already have some Riak containers running."
   echo "Please take them down before attempting to bring up another"
   echo "cluster with the following command:"
-  echo ""
+  echo
   echo "  make stop-cluster"
-  echo ""
+  echo
 
   exit 1
 fi
@@ -50,7 +61,7 @@ do
   echo "  Successfully brought up [riak-cs${index}]"
 done
 
-if env | egrep -q "DOCKER_RIAK_CS_HAPROXY"; then
+if env | egrep -q "DOCKER_RIAK_CS_HAPROXY=1"; then
   RIAK_CS_CONTAINER_LINKS=""
 
   for index in $(seq -f "%02g" "1" "${DOCKER_RIAK_CS_CLUSTER_SIZE}");
