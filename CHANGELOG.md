@@ -1,3 +1,7 @@
+## 0.5.0
+
+* Add support for an HAProxy container that load balances against all nodes.
+
 ## 0.4.0
 
 * Use `localhost` if `DOCKER_HOST` is not defined.
