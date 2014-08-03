@@ -1,6 +1,5 @@
 # docker-riak-cs [![Build Status](https://secure.travis-ci.org/hectcastro/docker-riak-cs.png?branch=develop)](http://travis-ci.org/hectcastro/docker-riak-cs)
 
-
 This is a [Docker](http://docker.io) project to bring up a local
 [Riak CS](https://github.com/basho/riak_cs) cluster.
 
@@ -19,12 +18,17 @@ $ export DOCKER_HOST="tcp://192.168.59.103:2375"
 ```
 
 **Note:** If you're using [boot2docker](https://github.com/boot2docker/boot2docker)
-ensure that you forward the virtual machine port range (`49000-49900`). This
+ensure that you forward the virtual machine port range (`49000-49900`, `8080`,
+`8888`). This
 will allow you to interact with the containers as if they were running
 locally:
 
 ```bash
 $ for i in {49000..49900}; do
+ VBoxManage modifyvm "boot2docker-vm" --natpf1 "tcp-port$i,tcp,,$i,,$i";
+ VBoxManage modifyvm "boot2docker-vm" --natpf1 "udp-port$i,udp,,$i,,$i";
+done
+$ for i in {8080,8888}; do
  VBoxManage modifyvm "boot2docker-vm" --natpf1 "tcp-port$i,tcp,,$i,,$i";
  VBoxManage modifyvm "boot2docker-vm" --natpf1 "udp-port$i,udp,,$i,,$i";
 done
@@ -47,6 +51,14 @@ net.ipv4.tcp_tw_reuse = 1
 net.ipv4.tcp_moderate_rcvbuf = 1
 ```
 
+### `riak-cs-haproxy`
+
+In order to interact with the entire cluster through one endpoint, the
+`DOCKER_RIAK_CS_HAPROXY` environmental variable makes use of the
+[hectcastro/riak-cs-haproxy](https://github.com/hectcastro/docker-riak-cs-haproxy)
+image. This image automatically load balances incoming HTTP requests to port
+`8080` against linked Riak CS containers.
+
 ## Running
 
 ### Clone repository and build Riak CS image
@@ -63,13 +75,15 @@ $ make build
   (default: `5`)
 - `DOCKER_RIAK_CS_AUTOMATIC_CLUSTERING` – A flag to automatically cluster Riak
   (default: `false`)
+- `DOCKER_RIAK_CS_HAPROXY` - Enable an HAProxy container to load balance requests
+  against all Riak CS nodes (default: `false`)
 - `DOCKER_RIAK_CS_DEBUG` – A flag to `set -x` on the cluster management scripts
   (default: `false`)
 
 ### Launch cluster
 
 ```bash
-$ DOCKER_RIAK_CS_AUTOMATIC_CLUSTERING=1 DOCKER_RIAK_CS_CLUSTER_SIZE=5 make start-cluster
+$ DOCKER_RIAK_CS_HAPROXY=1 DOCKER_RIAK_CS_AUTOMATIC_CLUSTERING=1 DOCKER_RIAK_CS_CLUSTER_SIZE=5 make start-cluster
 ./bin/start-cluster.sh
 
 Bringing up cluster nodes:
@@ -79,6 +93,12 @@ Bringing up cluster nodes:
   Successfully brought up [riak-cs03]
   Successfully brought up [riak-cs04]
   Successfully brought up [riak-cs05]
+  Successfully brought up [riak-cs-haproxy]
+
+  Riak CS credentials:
+
+    admin_key: VA4H7GSPO1J0NKMYT-TJ
+    admin_secret: GvaJALz20W4-Xb330SBft8kPK3d-KKgG4fAMdA==
 
 Please wait approximately 30 seconds for the cluster to stabilize.
 ```

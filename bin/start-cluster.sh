@@ -6,18 +6,29 @@ if env | egrep -q "DOCKER_RIAK_CS_DEBUG"; then
   set -x
 fi
 
+if ! env | egrep -q "DOCKER_RIAK_CS_AUTOMATIC_CLUSTERING=1" && \
+  env | egrep -q "DOCKER_RIAK_CS_HAPROXY=1"; then
+  echo
+  echo "It appears that you have enabled HAProxy support, but have"
+  echo "not enabled automatic clustering. In order to use Riak and"
+  echo "HAProxy, please enable automatic clustering."
+  echo
+
+  exit 1
+fi
+
 CLEAN_DOCKER_HOST=$(echo "${DOCKER_HOST}" | cut -d'/' -f3 | cut -d':' -f1)
 CLEAN_DOCKER_HOST=${CLEAN_DOCKER_HOST:-localhost}
 DOCKER_RIAK_CS_CLUSTER_SIZE=${DOCKER_RIAK_CS_CLUSTER_SIZE:-5}
 
 if docker ps -a | egrep "hectcastro/riak" >/dev/null; then
-  echo ""
+  echo
   echo "It looks like you already have some Riak containers running."
   echo "Please take them down before attempting to bring up another"
   echo "cluster with the following command:"
-  echo ""
+  echo
   echo "  make stop-cluster"
-  echo ""
+  echo
 
   exit 1
 fi
@@ -49,6 +60,26 @@ do
 
   echo "  Successfully brought up [riak-cs${index}]"
 done
+
+if env | egrep -q "DOCKER_RIAK_CS_HAPROXY=1"; then
+  RIAK_CS_CONTAINER_LINKS=""
+
+  for index in $(seq -f "%02g" "1" "${DOCKER_RIAK_CS_CLUSTER_SIZE}");
+  do
+    RIAK_CS_CONTAINER_LINKS="${RIAK_CS_CONTAINER_LINKS}--link riak-cs${index}:riak-cs${index} "
+  done
+
+  eval docker run -p 8080:8080 -p 8888:8888 \
+    "${RIAK_CS_CONTAINER_LINKS}"\
+    --name "riak-cs-haproxy" -d hectcastro/riak-cs-haproxy > /dev/null 2>&1
+
+  until curl -s "http://${CLEAN_DOCKER_HOST}:8080/riak-cs/ping" | egrep "OK" > /dev/null 2>&1;
+  do
+    sleep 3
+  done
+
+  echo "  Successfully brought up [riak-cs-haproxy]"
+fi
 
 INSECURE_KEY_FILE=.insecure_key
 SSH_KEY_URL="https://github.com/phusion/baseimage-docker/raw/master/image/insecure_key"
