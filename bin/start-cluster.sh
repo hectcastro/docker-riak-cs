@@ -37,8 +37,11 @@ echo
 echo "Bringing up cluster nodes:"
 echo
 
-for index in $(seq -f "%02g" "1" "${DOCKER_RIAK_CS_CLUSTER_SIZE}");
+for index in $(seq -w "1" "99");
 do
+  if [ "${index}" -gt "${DOCKER_RIAK_CS_CLUSTER_SIZE}" ] ; then
+      break
+  fi
   if [ "${index}" -gt "1" ] ; then
     docker run -e "DOCKER_RIAK_CS_CLUSTER_SIZE=${DOCKER_RIAK_CS_CLUSTER_SIZE}" \
                -e "DOCKER_RIAK_CS_AUTOMATIC_CLUSTERING=${DOCKER_RIAK_CS_AUTOMATIC_CLUSTERING}" \
@@ -64,8 +67,11 @@ done
 if env | egrep -q "DOCKER_RIAK_CS_HAPROXY=1"; then
   RIAK_CS_CONTAINER_LINKS=""
 
-  for index in $(seq -f "%02g" "1" "${DOCKER_RIAK_CS_CLUSTER_SIZE}");
+  for index in $(seq -w "1" "99");
   do
+    if [ "${index}" -gt "${DOCKER_RIAK_CS_CLUSTER_SIZE}" ] ; then
+      break
+    fi
     RIAK_CS_CONTAINER_LINKS="${RIAK_CS_CONTAINER_LINKS}--link riak-cs${index}:riak-cs${index} "
   done
 
