@@ -1,3 +1,7 @@
+## 0.5.1
+
+* Add support for BusyBox distribution.
+
 ## 0.5.0
 
 * Add support for an HAProxy container that load balances against all nodes.
