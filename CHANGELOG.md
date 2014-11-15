@@ -1,3 +1,10 @@
+## 0.6.0
+
+* Bump Riak version to `1.4.10`.
+* Bump `phusion/baseimage` version to `0.9.15`.
+* Bump Riak CS version to `1.5.2`.
+* Bump Stanchion version to `1.5.0`.
+
 ## 0.5.1
 
 * Add support for BusyBox distribution.
