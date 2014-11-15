@@ -151,7 +151,7 @@ First, we have to SSH into one of the Riak CS containers (see
 [SSH section](#ssh) below for details):
 
 ```bash
-$ ssh -i insecure_key root@172.17.0.2
+$ ssh -i .insecure_key root@172.17.0.2
 ```
 
 Next, we extract the `admin_key` and `admin_secret` from the Riak CS
@@ -240,12 +240,18 @@ $ docker inspect $CONTAINER_ID | egrep IPAddress
         "IPAddress": "172.17.0.2",
 ```
 
-Download the insecure key, alter its permissions, and use it to SSH into the
-container via its IP address:
+Download the insecure key and alter its permissions:
 
 ```bash
 $ curl -o insecure_key -fSL https://github.com/phusion/baseimage-docker/raw/master/image/insecure_key
 $ chmod 600 insecure_key
+```
+
+**Note:** If you started a cluster, the insecure key has already been downloaded as `.insecure_key`.
+
+Next, use the key to SSH into the container via its IP address:
+
+```bash
 $ ssh -i insecure_key root@172.17.0.2
 ```
 
