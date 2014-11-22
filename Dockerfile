@@ -1,6 +1,6 @@
 # Riak CS
 #
-# VERSION       0.6.0
+# VERSION       0.7.0
 
 FROM phusion/baseimage:0.9.15
 MAINTAINER Hector Castro hectcastro@gmail.com
@@ -13,7 +13,7 @@ ENV RIAK_CS_VERSION 1.5.2
 ENV RIAK_CS_SHORT_VERSION 1.5
 ENV STANCHION_VERSION 1.5.0
 ENV STANCHION_SHORT_VERSION 1.5
-ENV SERF_VERSION 0.6.2
+ENV SERF_VERSION 0.6.3
 
 # Install dependencies
 RUN apt-get update -qq && apt-get install unzip -y
@@ -27,7 +27,7 @@ RUN mkdir -p /etc/service/riak
 ADD bin/riak.sh /etc/service/riak/run
 
 # Install Riak CS
-ADD http://s3.amazonaws.com/downloads.basho.com/riak-cs/${RIAK_CS_SHORT_VERSION}/${RIAK_CS_VERSION}/ubuntu/precise/riak-cs_${RIAK_CS_VERSION}-1_amd64.deb /
+ADD http://s3.amazonaws.com/downloads.basho.com/riak-cs/${RIAK_CS_SHORT_VERSION}/${RIAK_CS_VERSION}/ubuntu/trusty/riak-cs_${RIAK_CS_VERSION}-1_amd64.deb /
 RUN (cd / && dpkg -i "riak-cs_${RIAK_CS_VERSION}-1_amd64.deb")
 
 # Setup the Riak CS service
@@ -35,7 +35,7 @@ RUN mkdir -p /etc/service/riak-cs
 ADD bin/riak-cs.sh /etc/service/riak-cs/run
 
 # Install Stanchion
-ADD http://s3.amazonaws.com/downloads.basho.com/stanchion/${STANCHION_SHORT_VERSION}/${STANCHION_VERSION}/ubuntu/precise/stanchion_${STANCHION_VERSION}-1_amd64.deb /
+ADD http://s3.amazonaws.com/downloads.basho.com/stanchion/${STANCHION_SHORT_VERSION}/${STANCHION_VERSION}/ubuntu/trusty/stanchion_${STANCHION_VERSION}-1_amd64.deb /
 RUN (cd / && dpkg -i "stanchion_${STANCHION_VERSION}-1_amd64.deb")
 
 # Setup the Stanchion service

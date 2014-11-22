@@ -1,3 +1,8 @@
+## 0.7.0
+
+* Use Trusty packages for Riak and Riak CS.
+* Bump Serf version to `0.6.3`.
+
 ## 0.6.0
 
 * Bump Riak version to `1.4.10`.
