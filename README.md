@@ -220,6 +220,12 @@ Save settings? [y/N] y
 Configuration saved to '/Users/hector/.s3cfg'
 ```
 
+__Important__: The new version of `s3cmd` uses AWS authentication v4,
+but Riak CS does not support it yet, see:
+https://github.com/basho/riak_cs/issues/897
+
+Add `signature_v2 = True` in your `.s3cfg` to workaround this issue.
+
 ### SSH
 
 The [phusion/baseimage-docker](https://github.com/phusion/baseimage-docker)
