@@ -88,7 +88,7 @@ if env | egrep -q "DOCKER_RIAK_CS_HAPROXY=1"; then
 fi
 
 INSECURE_KEY_FILE=.insecure_key
-SSH_KEY_URL="https://github.com/phusion/baseimage-docker/raw/master/image/insecure_key"
+SSH_KEY_URL="https://github.com/phusion/baseimage-docker/raw/master/image/services/sshd/keys/insecure_key"
 CS01_PORT=$(docker port riak-cs01 22 | cut -d':' -f2)
 
 # Download insecure ssh key of phusion/baseimage-docker
