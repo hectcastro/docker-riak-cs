@@ -1,3 +1,7 @@
+## 0.7.1
+
+* Fix reference to `phusion/baseimage` insecure key.
+
 ## 0.7.0
 
 * Use Trusty packages for Riak and Riak CS.
