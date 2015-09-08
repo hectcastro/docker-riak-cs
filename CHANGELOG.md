@@ -1,3 +1,7 @@
+## 0.7.2
+
+* Fix container ID extraction by container name.
+
 ## 0.7.1
 
 * Fix reference to `phusion/baseimage` insecure key.
