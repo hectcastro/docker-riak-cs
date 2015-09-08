@@ -53,7 +53,7 @@ do
                -P --name "riak-cs${index}" -d hectcastro/riak-cs > /dev/null 2>&1
   fi
 
-  CONTAINER_ID=$(docker ps | egrep "riak-cs${index}[^/]" | cut -d" " -f1)
+  CONTAINER_ID=$(docker ps | egrep "riak-cs${index}" | cut -d" " -f1)
   CONTAINER_PORT=$(docker port "${CONTAINER_ID}" 8080 | cut -d ":" -f2)
 
   until curl -s "http://${CLEAN_DOCKER_HOST}:${CONTAINER_PORT}/riak-cs/ping" | egrep "OK" > /dev/null 2>&1;

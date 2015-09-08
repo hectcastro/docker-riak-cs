@@ -1,6 +1,6 @@
 # Riak CS
 #
-# VERSION       0.7.0
+# VERSION       0.7.2
 
 FROM phusion/baseimage:0.9.15
 MAINTAINER Hector Castro hectcastro@gmail.com
