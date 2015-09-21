@@ -114,6 +114,11 @@ if [ -f $INSECURE_KEY_FILE ]; then
   echo "  Riak CS credentials:"
   echo
 
+  # If starting only one node we need to wait a litle bit for keys
+  if [ ${DOCKER_RIAK_CS_CLUSTER_SIZE} -eq 1 ] ; then
+      sleep 30
+  fi
+
   for field in admin_key admin_secret ; do
     echo -n "    ${field}: "
 
