@@ -46,8 +46,8 @@ ADD bin/stanchion.sh /etc/service/stanchion/run
 ADD bin/automatic_clustering.sh /etc/my_init.d/99_automatic_clustering.sh
 
 # Install Serf
-ADD https://dl.bintray.com/mitchellh/serf/${SERF_VERSION}_linux_amd64.zip /
-RUN (cd / && unzip ${SERF_VERSION}_linux_amd64.zip -d /usr/bin/)
+ADD https://releases.hashicorp.com/serf/${SERF_VERSION}/serf_${SERF_VERSION}_linux_amd64.zip /
+RUN (cd / && unzip serf_${SERF_VERSION}_linux_amd64.zip -d /usr/bin/)
 
 # Setup the Serf service
 RUN mkdir -p /etc/service/serf && \
@@ -87,7 +87,7 @@ RUN /usr/sbin/enable_insecure_key
 RUN rm "/riak_${RIAK_VERSION}-1_amd64.deb" && \
     rm "/riak-cs_${RIAK_CS_VERSION}-1_amd64.deb" && \
     rm "/stanchion_${STANCHION_VERSION}-1_amd64.deb" && \
-    rm "/${SERF_VERSION}_linux_amd64.zip"
+    rm "/serf_${SERF_VERSION}_linux_amd64.zip"
 RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 # Leverage the baseimage-docker init system
