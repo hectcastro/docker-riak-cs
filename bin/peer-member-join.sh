@@ -10,7 +10,7 @@ if [ "${SERF_USER_EVENT}" != "riak-cs-admin-key" ] && [ "${SERF_USER_EVENT}" != 
 fi
 
 # Catch admin credentials and populate them
-while read LINE; do
+while read -r LINE; do
   if [ "${SERF_USER_EVENT}" = "riak-cs-admin-key" ]; then
     sudo su -c "sed -i 's/admin-key/${LINE}/' /etc/riak-cs/app.config" - root
   fi
