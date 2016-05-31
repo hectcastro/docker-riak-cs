@@ -21,7 +21,7 @@ CLEAN_DOCKER_HOST=$(echo "${DOCKER_HOST}" | cut -d'/' -f3 | cut -d':' -f1)
 CLEAN_DOCKER_HOST=${CLEAN_DOCKER_HOST:-localhost}
 DOCKER_RIAK_CS_CLUSTER_SIZE=${DOCKER_RIAK_CS_CLUSTER_SIZE:-5}
 
-if docker ps -a | egrep "hectcastro/riak" >/dev/null; then
+if docker ps | egrep "hectcastro/riak-cs" >/dev/null; then
   echo
   echo "It looks like you already have some Riak containers running."
   echo "Please take them down before attempting to bring up another"
