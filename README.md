@@ -249,7 +249,7 @@ $ docker inspect $CONTAINER_ID | egrep IPAddress
 Download the insecure key and alter its permissions:
 
 ```bash
-$ curl -o insecure_key -fSL https://github.com/phusion/baseimage-docker/raw/master/image/insecure_key
+$ curl -o insecure_key -fSL https://github.com/phusion/baseimage-docker/raw/master/image/services/sshd/keys/insecure_key
 $ chmod 600 insecure_key
 ```
 
